@@ -10,7 +10,7 @@ OBJPATH := obj/
 OBJDIR = $(subst $(SRCPATH), $(OBJPATH), $(shell find $(SRCPATH)* -type d))
 OBJ = $(subst $(SRCPATH), $(OBJPATH), $(SRC:.s=.o))
 
-INC := -Iinclude/
+INC := -Iinclude/ -Imy_libc/include
 
 ############################################################################################
    #_____    _____    _____ 
@@ -32,25 +32,33 @@ CFLAGS = -Wall -Wextra -Werror
  #|_| \_| /_/    \_\ |_____/  |_|  |_|
   
 AS = nasm
-ASFLAGS = -f elf64
+ASFLAGS = -felf64
 ############################################################################################
 TEST := test
 TEST_SRC := main.c
 TEST_OBJ := $(TEST_SRC:.c=.o)
-TEST_LIB := $(NAME)
+TEST_LIB := $(NAME) 
 ############################################################################################
 
 all: $(NAME) 
 
+############################################################################################
 $(TEST): $(NAME) $(TEST_SRC)
 	$(CC) $(CFLAGS) $(TEST_SRC) $(TEST_LIB) $(INC) -o $(TEST)
-	./$(TEST)
+	./$(TEST) | bat
+
+debug:
+	gdb	./$(TEST)
+############################################################################################
 
 $(NAME): $(OBJPATH) $(OBJ)
 	ar rc $(NAME) $(OBJ) 
 
 $(OBJPATH)%.o: %.s
 	$(AS) $(ASFLAGS) $< -o $@
+
+$(OBJPATH)%.o: %.c
+	$(CC) $(CFLAGS) $< -o $@
 
 $(OBJPATH):
 	mkdir -p $(OBJPATH) $(OBJDIR)
