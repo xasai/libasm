@@ -1,6 +1,8 @@
 #include <unistd.h>
+#include <fcntl.h>
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 #include <errno.h>
 #include "libasm.h"
 
@@ -11,8 +13,7 @@
 void	print_errno()
 {
 	char *str = strerror(errno);
-
-	write(1, str, ft_strlen(str));
+	write(1, str, strlen(str));
 	write(1, "\n", 1);
 }
 
@@ -84,7 +85,7 @@ void	strcmp_t()
 
 void	write_t()
 {
-	char str[] = "\t===================\e[0;35m[WRITE]\e[0m==========================\n";
+	char str[] = "\n\t===================\e[0;35m[WRITE]\e[0m==========================\n";
 	char *strs[] = {"str1", "str2i ", "str33333333333", "str44444444444", "a",
 	"", "asdfasdfasdfadsfa"
 		, "veeeeiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiing", 0};
@@ -92,7 +93,6 @@ void	write_t()
 	int ft, std;
 
 	write(1, str, strlen(str));
-	printf(str);
 
 	for (int i = 0; strs[i]; i++)
 	{
@@ -106,10 +106,7 @@ void	write_t()
 		write(1, "\nft :\"", 6);
 		ft = ft_write(1, s, len);
 		write(1, "\" ", 2);
-		print_errno();
-
-		char *check = CHECK(ft==std);
-		printf("\n case[%d]std[%d]ft[%d] ret%s\n", i,std,ft,check);
+		write(1, CHECK(ft==std), check_len);
 	}
 
 	/* Check errno on error cases */
@@ -126,11 +123,58 @@ void	write_t()
 	ft = ft_write(1, "", -1); print_errno(); errno = 0;
 	write(1, CHECK(std==ft), check_len);
 }
+void	read_t()
+{
+
+	char *buf = calloc(sizeof(*buf), 1000);
+	int fd = open("test.txt", O_RDWR);
+	int std;
+	int ft;
+	int check_len = strlen(CHECK(1));
+	/* Check on real file */
+	std = read(fd, buf, 1000);
+	lseek(fd, 0, SEEK_SET);
+	write(1, buf, std);
+	write(1, "\n", 1);
+	ft = ft_read(fd, buf, 1000);
+	lseek(fd, 0, SEEK_SET);
+	write(1, buf, ft);
+	write(1, CHECK(ft==std), check_len);	
+	
+	/* Check errno on error cases */	
+	int fail_fd = 123;
+	std = read(fail_fd, buf, 123); print_errno(); errno = 0;
+	lseek(fd, 0, SEEK_SET);
+	ft = ft_read(fail_fd, buf, 123); print_errno(); errno = 0;
+	lseek(fd, 0, SEEK_SET);
+	
+	char *fail_addr = NULL;
+	std = read(fd, fail_addr, 123); print_errno(); errno = 0;
+	lseek(fd, 0, SEEK_SET);
+	ft = ft_read(fd, fail_addr, 123); print_errno(); errno = 0;
+	lseek(fd, 0, SEEK_SET);
+
+	int	neg_size = -1;
+	std = read(fd, buf,	neg_size); print_errno(); errno = 0;
+	lseek(fd, 0, SEEK_SET);
+	ft = ft_read(fd, buf, neg_size); print_errno(); errno = 0;
+	lseek(fd, 0, SEEK_SET);
+	close(fd);
+	
+	/* Write only permission */
+	fd = open("test.txt", O_WRONLY);
+	std = read(fd, buf, 100); print_errno(); errno = 0;
+	lseek(fd, 0, SEEK_SET);
+	ft = ft_read(fd, buf, 100); print_errno(); errno = 0;
+	lseek(fd, 0, SEEK_SET);
+	close(fd);	
+}
 
 int		main()
 {
+	//write_t();
+	read_t();
 	//strlen_t();
 	//strcpy_t();
-	strcmp_t();
-	write_t();
+	//strcmp_t();
 }
