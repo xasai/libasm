@@ -123,9 +123,13 @@ void	write_t()
 	ft = ft_write(1, "", -1); print_errno(); errno = 0;
 	write(1, CHECK(std==ft), check_len);
 }
+
 void	read_t()
 {
+	char str[] = "\n\t===================\e[0;35m[WRITE]\e[0m==========================\n";
 
+	write(1, str, strlen(str));
+	
 	char *buf = calloc(sizeof(*buf), 1000);
 	int fd = open("test.txt", O_RDWR);
 	int std;
@@ -147,18 +151,21 @@ void	read_t()
 	lseek(fd, 0, SEEK_SET);
 	ft = ft_read(fail_fd, buf, 123); print_errno(); errno = 0;
 	lseek(fd, 0, SEEK_SET);
+	write(1, CHECK(ft==std), check_len);	
 	
 	char *fail_addr = NULL;
 	std = read(fd, fail_addr, 123); print_errno(); errno = 0;
 	lseek(fd, 0, SEEK_SET);
 	ft = ft_read(fd, fail_addr, 123); print_errno(); errno = 0;
 	lseek(fd, 0, SEEK_SET);
+	write(1, CHECK(ft==std), check_len);	
 
 	int	neg_size = -1;
 	std = read(fd, buf,	neg_size); print_errno(); errno = 0;
 	lseek(fd, 0, SEEK_SET);
 	ft = ft_read(fd, buf, neg_size); print_errno(); errno = 0;
 	lseek(fd, 0, SEEK_SET);
+	write(1, CHECK(ft==std), check_len);	
 	close(fd);
 	
 	/* Write only permission */
@@ -167,14 +174,43 @@ void	read_t()
 	lseek(fd, 0, SEEK_SET);
 	ft = ft_read(fd, buf, 100); print_errno(); errno = 0;
 	lseek(fd, 0, SEEK_SET);
+	write(1, CHECK(ft==std), check_len);	
 	close(fd);	
 }
+void	strdup_t()
+{
+	printf("\t===================\e[0;35m[STRDUP]\e[0m==========================\n");
 
+	char *str[] = {"str1", "str2i ", "str33333333333", "str44444444444", "a",
+	"", "asdfasdfasdfadsfa"
+		, "veeeeiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiing", 0};
+	char *std;
+	char *ft;
+	int i = -1;
+	while(str[++i])
+	{
+		ft = ft_strdup(str[i]);
+		std = strdup(str[i]);
+		printf("std[%ld]=\"%s\" ft[%ld]=\"%s\" %s",
+				ft_strlen(std), std, ft_strlen(ft), ft, CHECK(ft_strcmp(ft, std)==0));
+		free(ft);
+		free(std);
+	}
+
+	/*here str[i] == NULL 
+	  Segfault excepted  
+	
+	ft = ft_strdup(str[i]);
+	std = strdup(str[i]);
+	printf("std[%ld]=\"%s\" ft[%ld]=\"%s\" %s", ft_strlen(std), std, ft_strlen(ft), ft,
+	CHECK(ft_strcmp(ft, std)==0));*/
+}
 int		main()
 {
-	//write_t();
+	write_t();
 	read_t();
-	//strlen_t();
-	//strcpy_t();
-	//strcmp_t();
+	strlen_t();
+	strcpy_t();
+	strcmp_t();
+	strdup_t();
 }
