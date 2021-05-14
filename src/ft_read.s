@@ -14,5 +14,6 @@ ft_read:
 			neg			ebx;	get positive num from syscall return
 			call		__errno_location wrt ..plt; get errno address on LINUX
 			mov			[rax], ebx;	move errnum to errno
-			pop			rbx;
+			mov			rax, -1; return -1
+			pop			rbx; get rbx back
 			ret;

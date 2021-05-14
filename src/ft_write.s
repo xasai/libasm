@@ -15,6 +15,6 @@ ft_write:
 			neg		ebx;		we need positive num to store in errno
 			call 	__errno_location wrt ..plt; get errno address on LINUX
 			mov 	[rax], ebx;	mov return of sys_write to errno
-			mov 	rax, -1; 	
-			pop		rbx;
+			mov 	rax, -1; 	return -1
+			pop		rbx;		get rbx back
 			ret;

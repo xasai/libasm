@@ -111,10 +111,9 @@ void	write_t()
 
 	/* Check errno on error cases */
 	int fail_fd = 32;
-	std =write(fail_fd, "", 1); print_errno(); errno = 0;
+	std = write(fail_fd, "", 1); print_errno(); errno = 0;
 	ft = ft_write(fail_fd, "", 1); print_errno(); errno = 0;
 	write(1, CHECK(std==ft), check_len);
-
 	std = write(1, NULL, 1); print_errno(); errno = 0;
 	ft = ft_write(1, NULL, 1); print_errno(); errno = 0;
 	write(1, CHECK(std==ft), check_len);
@@ -126,7 +125,7 @@ void	write_t()
 
 void	read_t()
 {
-	char str[] = "\n\t===================\e[0;35m[WRITE]\e[0m==========================\n";
+	char str[] = "\n\t===================\e[0;35m[READ]\e[0m==========================\n";
 
 	write(1, str, strlen(str));
 	
