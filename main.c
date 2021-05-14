@@ -1,14 +1,18 @@
-#include <unistd.h>
-#include <fcntl.h>
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
-#include <errno.h>
 #include "libasm.h"
 
 #define OK "[\e[0;32mOK\e[0m]\n"
 #define KO "[\e[0;31mKO\e[0m]\n"
 #define CHECK(x) (x ? OK : KO) 
+
+void	free_lst(t_list *head)
+{
+	/* FREE */
+	for (t_list *next, *cur = head; next && cur; cur = next)
+	{
+		next = cur->next;
+		free(cur);
+	}
+}
 
 void	print_errno()
 {
@@ -204,6 +208,28 @@ void	strdup_t()
 	printf("std[%ld]=\"%s\" ft[%ld]=\"%s\" %s", ft_strlen(std), std, ft_strlen(ft), ft,
 	CHECK(ft_strcmp(ft, std)==0));*/
 }
+
+void	list_push_front_t()
+{
+	printf("\t===================\e[0;35m[STRDUP]\e[0m==========================\n");
+
+	char *str[] = {"first", "second ", "3333333333333333333333", "4444444", "5555555",
+	"next will be emty", ""
+		, "last node", 0};
+
+	t_list *head;
+
+	head = NULL;
+	for (int i = 0; str[i]; i++)
+		ft_list_push_front(&head, (void *)str[i]);
+	for (t_list *cur = head; cur; cur = cur->next)
+		printf("|%s|---->", (char *)cur->data);
+	printf("|NULL|");
+	
+	free_lst(head);
+
+}
+
 int		main()
 {
 	write_t();
@@ -212,4 +238,5 @@ int		main()
 	strcpy_t();
 	strcmp_t();
 	strdup_t();
+	list_push_front_t();
 }
