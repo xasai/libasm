@@ -230,21 +230,43 @@ void	list_push_front_t()
 	for (t_list *cur = head; cur; cur = cur->next)
 		printf("|%s|---->", (char *)cur->data);
 	printf("|NULL|");
-
+	
 	free_lst(head);
 }
+void	list_size_t()
+{
+	
+	printf("\t===================\e[0;35m[LIST_SIZE]\e[0m==========================\n");
 
+	char *str[] = {"first", "second ", "3333333333333333333333", "4444444", "5555555",
+	"next will be emty", ""
+		, "last node", 0};
+
+	t_list *head;
+	head = NULL;
+	int i = 0;
+	int	size;
+	while (str[i])
+		ft_list_push_front(&head, str[i++]);
+	size = ft_list_size(head);
+	free_lst(head);
+	printf("real [%d] == [%d] your %s", i, size, CHECK(size==i));
+	size = ft_list_size(NULL);
+	printf("real [%d] == [%d] your %s", i, size, CHECK(size==0));
+}
+
+void	bonus_t()
+{
+	list_push_front_t();
+	list_size_t();
+}
 int		main()
 {
-	/*
 	write_t();
 	read_t();
 	strlen_t();
 	strcpy_t();
 	strcmp_t();
 	strdup_t();
-	list_size();
-	list_push_front_t();
-	*/
-	list_size_t();
+	bonus_t();
 }

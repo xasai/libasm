@@ -32,7 +32,9 @@ typedef struct s_list
 */
 t_list		*list_init(void *data);
 
-void		ft_list_push_front(t_list **head, void *data);
 
+void		ft_list_push_back(t_list **head, void *data);
+void		ft_list_push_front(t_list **head, void *data);
+int			ft_list_size(t_list *head);
 
 #endif
