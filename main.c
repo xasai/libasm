@@ -201,7 +201,7 @@ void	strdup_t()
 	}
 
 	/*here str[i] == NULL 
-	  Segfault excepted  
+	  SIGSEGV excepted  
 	
 	ft = ft_strdup(str[i]);
 	std = strdup(str[i]);
@@ -218,25 +218,33 @@ void	list_push_front_t()
 		, "last node", 0};
 
 	t_list *head;
+	int i;
 
+	i = 0;
+	while (str[i])  
+		i++;
 	head = NULL;
-	for (int i = 0; str[i]; i++)
+	head = list_init("I am the real first");
+	for (i -= 1; i >= 0; i--)
 		ft_list_push_front(&head, (void *)str[i]);
 	for (t_list *cur = head; cur; cur = cur->next)
 		printf("|%s|---->", (char *)cur->data);
 	printf("|NULL|");
-	
-	free_lst(head);
 
+	free_lst(head);
 }
 
 int		main()
 {
+	/*
 	write_t();
 	read_t();
 	strlen_t();
 	strcpy_t();
 	strcmp_t();
 	strdup_t();
+	list_size();
 	list_push_front_t();
+	*/
+	list_size_t();
 }
