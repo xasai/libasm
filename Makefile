@@ -21,7 +21,7 @@ INC := -Iinclude/ -Imy_libc/include
   #\_____|  \_____|  \_____|
 
 CC = gcc 
-CFLAGS = -Wall -Wextra -Werror 
+CFLAGS = -Wall -Wextra -Werror  -g3
 
 ############################################################################################
  # _   _               _____   __  __ 
@@ -47,7 +47,8 @@ $(TEST): $(NAME) $(TEST_SRC)
 	$(CC) $(CFLAGS) $(TEST_SRC) $(TEST_LIB) $(INC) -o $(TEST)
 	./$(TEST) | bat
 
-debug:
+debug: $(NAME)
+	$(CC) $(CFLAGS) $(TEST_SRC) $(TEST_LIB) $(INC) -o $(TEST)
 	gdb	./$(TEST)
 ############################################################################################
 

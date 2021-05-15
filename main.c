@@ -233,6 +233,7 @@ void	list_push_front_t()
 	
 	free_lst(head);
 }
+
 void	list_size_t()
 {
 	
@@ -255,18 +256,58 @@ void	list_size_t()
 	printf("real [%d] == [%d] your %s", i, size, CHECK(size==0));
 }
 
+void	list_sort_t()
+{
+	printf("\t===================\e[0;35m[LIST_SIZE]\e[0m==========================\n");
+
+	char *str[] = {"111", "666", "0000000000", "444", "2222", "999", "777", 0};
+	t_list *head;
+	int i = 0;
+	while(str[i]) i++;
+	while(--i >= 0)
+		ft_list_push_front(&head, str[i]);
+	printf("unsorted\n");
+	for(t_list *cur = head; cur; cur = cur->next)
+		printf("--->|%s|",(char *)cur->data);
+	ft_list_sort(&head, &ft_strcmp);
+	printf("\nsorted\n");
+	for(t_list *cur=head; cur; cur=cur->next)
+		printf("--->|%s|",(char *)cur->data);
+	free_lst(head);
+
+	str = (char [] *) {"182348148128", "666", "0000000000", "z" "2222", "9aaaa9", "1123", 0};
+	t_list *head;
+	i = 0;
+	while(str[i]) i++;
+	while(--i >= 0)
+		ft_list_push_front(&head, str[i]);
+	printf("unsorted\n");
+	for(t_list *cur = head; cur; cur = cur->next)
+		printf("--->|%s|",(char *)cur->data);
+	ft_list_sort(&head, &ft_strcmp);
+	printf("\nsorted\n");
+	for(t_list *cur=head; cur; cur=cur->next)
+		printf("--->|%s|",(char *)cur->data);
+	free_lst(head);
+
+}
+
 void	bonus_t()
 {
-	list_push_front_t();
-	list_size_t();
+	//list_push_front_t();
+	//list_size_t();
+	list_sort_t();	
 }
+
 int		main()
 {
+	/*
 	write_t();
 	read_t();
 	strlen_t();
 	strcpy_t();
 	strcmp_t();
 	strdup_t();
+	*/
 	bonus_t();
 }
