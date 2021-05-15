@@ -274,22 +274,6 @@ void	list_sort_t()
 	for(t_list *cur=head; cur; cur=cur->next)
 		printf("--->|%s|",(char *)cur->data);
 	free_lst(head);
-
-	str = (char [] *) {"182348148128", "666", "0000000000", "z" "2222", "9aaaa9", "1123", 0};
-	t_list *head;
-	i = 0;
-	while(str[i]) i++;
-	while(--i >= 0)
-		ft_list_push_front(&head, str[i]);
-	printf("unsorted\n");
-	for(t_list *cur = head; cur; cur = cur->next)
-		printf("--->|%s|",(char *)cur->data);
-	ft_list_sort(&head, &ft_strcmp);
-	printf("\nsorted\n");
-	for(t_list *cur=head; cur; cur=cur->next)
-		printf("--->|%s|",(char *)cur->data);
-	free_lst(head);
-
 }
 
 void	bonus_t()
