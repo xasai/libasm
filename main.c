@@ -5,15 +5,20 @@
 #define CHECK(x) (x ? OK : KO) 
 #define GRADE() "[\e[0;35mCHECK IT BY YOURSELF\e[0m]\n"
 
-void	free_lst(t_list *head)
+void	free_lst(t_list **hhead)
 {
-	/* FREE */
-	for (t_list *next, *cur = head; next && cur; cur = next)
+	t_list *next;
+	t_list *head;
+
+	head = *hhead;
+	while(head)
 	{
-		next = cur->next;
-		cur->next = NULL;
-		free(cur);
+		next = head->next;
+		head->next = NULL;
+		free(head);
+		head = next;
 	}
+	*hhead = NULL;
 }
 
 void	print_errno()
@@ -187,6 +192,8 @@ void	read_t()
 	lseek(fd, 0, SEEK_SET);
 	write(1, CHECK(ft==std), check_len);	
 	close(fd);	
+
+	free(buf);
 }
 void	strdup_t()
 {
@@ -219,7 +226,7 @@ void	strdup_t()
 
 void	list_push_front_t()
 {
-	printf("\t===================\e[0;35m[STRDUP]\e[0m==========================\n");
+	printf("\t===================\e[0;35m[LIST_PUSH_FRONT]\e[0m==========================\n");
 
 	char *str[] = {"first", "second ", "3333333333333333333333", "4444444", "5555555",
 	"next will be emty", ""
@@ -228,45 +235,45 @@ void	list_push_front_t()
 	t_list *head;
 	int i;
 
-	i = 0;
-	while (str[i])  
-		i++;
 	head = NULL;
-	head = list_init("I am the real first");
-	for (i -= 1; i >= 0; i--)
+	i = -1;	
+	while(str[++i])
 		ft_list_push_front(&head, (void *)str[i]);
 	for (t_list *cur = head; cur; cur = cur->next)
-		printf("|%s|---->", (char *)cur->data);
-	printf("|NULL|");
-	
-	free_lst(head);
+	{
+		printf("%s ---> ", (char *)cur->data);
+		if (!cur->next)
+			printf("%p", cur->next);
+	}
+	free_lst(&head);
 }
 
 void	list_size_t()
 {
 	
-	printf("\t===================\e[0;35m[LIST_SIZE]\e[0m==========================\n");
+	printf("\n\n\t===================\e[0;35m[LIST_SIZE]\e[0m==========================\n");
 
 	char *str[] = {"first", "second ", "3333333333333333333333", "4444444", "5555555",
-	"next will be emty", ""
-		, "last node", 0};
+						"next will be emty", "" , "last node", 0};
 
 	t_list *head;
-	head = NULL;
-	int i = 0;
+	//head = NULL;
+	int i = -1;
 	int	size;
-	while (str[i])
-		ft_list_push_front(&head, str[i++]);
+	while (str[++i])
+		ft_list_push_front(&head, str[i]);
+	for (t_list *cur = head ;cur;cur = cur->next)
+	{
+		printf("%s<---",(char *) cur->data);
+	}
 	size = ft_list_size(head);
-	free_lst(head);
+	free_lst(&head);
 	printf("real [%d] == [%d] your %s", i, size, CHECK(size==i));
-	size = ft_list_size(NULL);
-	printf("real [%d] == [%d] your %s", i, size, CHECK(size==0));
 }
 
 void	list_sort_t()
 {
-	printf("\t===================\e[0;35m[LIST_SIZE]\e[0m==========================\n");
+	printf("\n\t===================\e[0;35m[LIST_SORT]\e[0m==========================\n");
 
 	char *str[] = {"111", "666", "0000000000", "444", "2222", "999", "777", 0};
 	t_list *head;
@@ -281,17 +288,17 @@ void	list_sort_t()
 	printf("\nsorted\n");
 	for(t_list *cur=head; cur; cur=cur->next)
 		printf("--->|%s|",(char *)cur->data);
-	free_lst(head);
+	free_lst(&head);
 }
 
 void	list_remove_t()
 {
-	printf("\t===================\e[0;35m[LIST_REMOVE_IF]\e[0m==========================\n");
+	printf("\n\t===================\e[0;35m[LIST_REMOVE_IF]\e[0m==========================\n");
 	char *str[] = {"111", "222", "333", "444", "555", "666", "777","888", "999", 0};
 	t_list *head;
-	head = NULL;
 	for(int j=0; j <= 3;j++)
 	{
+		head = NULL;
 		int i = 0;
 		printf("\n=========================== \e[0;32mCASE %d \e[0m===========================\n", j+1);
 		while(str[i]) i++;
@@ -308,15 +315,14 @@ void	list_remove_t()
 		}
 		for(t_list *cur = head; cur; cur = cur->next)
 			printf("%s--->",(char *)cur->data);
-		printf("|%p|", NULL);
 
+		printf("%p", head);
 		printf("\nDeleting all \"\e[0;31m000\e[0m\"...\n");
 		ft_list_remove_if(&head, "\e[0;31m000\e[0m", &strcmp, &free);
 		for(t_list *cur=head; cur; cur=cur->next)
-			printf("%s--->",(char *)cur->data);
-		printf("%p\n", NULL);
+			printf("%s--->", (char *)cur->data);
 		printf("%s", GRADE());
-		free_lst(head);
+		free_lst(&head);
 	}
 }
 

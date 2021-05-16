@@ -32,7 +32,7 @@ CFLAGS = -Wall -Wextra -Werror  -g3
  #|_| \_| /_/    \_\ |_____/  |_|  |_|
   
 AS = nasm
-ASFLAGS = -felf64
+ASFLAGS = -felf64 -gdwarf
 ############################################################################################
 TEST := test
 TEST_SRC := main.c
@@ -43,9 +43,12 @@ TEST_LIB := -L. -lasm
 all: $(NAME) 
 
 ############################################################################################
-$(TEST): $(NAME) $(TEST_SRC)
+$(TEST): $(NAME) 
 	$(CC) $(CFLAGS) $(TEST_SRC) $(TEST_LIB) $(INC) -o $(TEST)
-	./$(TEST) | bat
+
+val: $(NAME)
+	$(CC) $(CFLAGS) $(TEST_SRC) $(TEST_LIB) $(INC) -o $(TEST)
+	valgrind --leak-check=full ./$(TEST)
 
 debug: $(NAME)
 	$(CC) $(CFLAGS) $(TEST_SRC) $(TEST_LIB) $(INC) -o $(TEST)

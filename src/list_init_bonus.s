@@ -15,6 +15,6 @@ list_init:
 			pop		rdi; 				get data back
 			test	rax, rax; 			if malloc ret NULL
 			jz		.end;				ret NULL	
-			and	qword [rax + 0x08], 0x0;	assign next field to NULL
+			mov	qword [rax + 0x08], 0x0;	assign next field to NULL
 			mov		[rax], rdi;			move data to field data	
 .end		ret	

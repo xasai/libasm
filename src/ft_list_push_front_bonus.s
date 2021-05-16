@@ -1,7 +1,6 @@
 section	.text
 
 extern	list_init
-;void	ft_list_push_front(struct s_list **head, void *data)
 global	ft_list_push_front
 
 ft_list_push_front:
@@ -13,7 +12,7 @@ ft_list_push_front:
 				mov		[rbp - 0x8], rdi;	mov first node address to stack
 				mov		rdi, rsi;		mov data to 1st argument
 				call	list_init;		init list with data
-				and		rax, rax;		check ret for NULL
+				test	rax, rax;		check ret for NULL
 				jz		.end;			if true, return
 				cmp		qword [rbp - 0x8], 0; if list is empty
 				je		.head_init;		skip next section 

@@ -37,13 +37,10 @@ ft_list_remove_if:
 				dec		rcx;				rcx--
 				jmp		.rm_head;			 goto remove_head
 
-;;.loop			test	rcx, rcx;			if rcx == 0;	
-;;				jz		.end;					goto end;
-;;				dec		rcx;				rcx--;
 .loop			mov		r14, rdi;			r14 = *prev_node
+				cmp qword[rdi + 8], 0;		
+				je		.end;					goto end
 				mov		rdi, [rdi + 8];		rdi = *curr_node	
-				test	rdi, rdi;			if (curr == NULL)
-				jz		.end;					goto end
 				mov		rdi, [rdi];			rdi = curr_node->data
 				mov		rsi, [rbp - 0x10];	rsi = *data_ref
 				call	[rbp - 0x18];		(*compare_data)(curr_node->data, data_ref)
@@ -58,6 +55,8 @@ ft_list_remove_if:
 				call	free wrt ..plt;		free(curr_node)
 				pop		rsi;
 				mov		[r14 + 8], rsi;		prev->next = curr_node->next
+				test	rsi,rsi;
+				jz		.end;
 				mov		rdi, rsi;			curr_node = curr_node->next
 				jmp		.loop
 .end			
