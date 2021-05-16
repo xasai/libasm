@@ -197,7 +197,7 @@ void	read_t()
 }
 void	strdup_t()
 {
-	printf("\t===================\e[0;35m[STRDUP]\e[0m==========================\n");
+	printf("\n\t===================\e[0;35m[STRDUP]\e[0m==========================\n");
 
 	char *str[] = {"str1", "str2i ", "str33333333333", "str44444444444", "a",
 	"", "asdfasdfasdfadsfa"
@@ -226,7 +226,7 @@ void	strdup_t()
 
 void	list_push_front_t()
 {
-	printf("\t===================\e[0;35m[LIST_PUSH_FRONT]\e[0m==========================\n");
+	printf("\n\n\t===================\e[0;35m[LIST_PUSH_FRONT]\e[0m==========================\n");
 
 	char *str[] = {"first", "second ", "3333333333333333333333", "4444444", "5555555",
 	"next will be emty", ""
@@ -273,7 +273,7 @@ void	list_size_t()
 
 void	list_sort_t()
 {
-	printf("\n\t===================\e[0;35m[LIST_SORT]\e[0m==========================\n");
+	printf("\n\n\t===================\e[0;35m[LIST_SORT]\e[0m==========================\n");
 
 	char *str[] = {"111", "666", "0000000000", "444", "2222", "999", "777", 0};
 	t_list *head;
@@ -293,18 +293,18 @@ void	list_sort_t()
 
 void	list_remove_t()
 {
-	printf("\n\t===================\e[0;35m[LIST_REMOVE_IF]\e[0m==========================\n");
+	printf("\n\n\t===================\e[0;35m[LIST_REMOVE_IF]\e[0m==========================\n");
 	char *str[] = {"111", "222", "333", "444", "555", "666", "777","888", "999", 0};
 	t_list *head;
-	for(int j=0; j <= 3;j++)
+	for(int j=0; j <= 4;j++)
 	{
 		head = NULL;
 		int i = 0;
-		printf("\n=========================== \e[0;32mCASE %d \e[0m===========================\n", j+1);
+		printf("\n\n=========================== \e[0;32mCASE %d \e[0m===========================\n", j+1);
 		while(str[i]) i++;
 		while(--i >= 0)
 		{
-			if (!((i + j) % 3))
+			if (!(i + j % 3) || j == 4)
 			{
 				char *nul = malloc(sizeof(*nul) * 18);
 				ft_strcpy(nul, "\e[0;31m000\e[0m");

@@ -1,38 +1,37 @@
 ##########################################################################################
-NAME =	$(shell basename $(CURDIR)).a
+NAME :=	$(shell basename $(CURDIR)).a
 
-SRCPATH = src/
-SRC = $(wildcard $(SRCPATH)*s)
+SRCPATH := src/
+SRC := ft_read.s ft_write.s ft_strcmp.s ft_strcpy.s ft_strdup.s ft_strlen.s
+SRC := $(addprefix $(SRCPATH), $(SRC))
 
-VPATH = $(SRCPATH)
+VPATH := $(SRCPATH)
 
 OBJPATH := obj/
-OBJDIR = $(subst $(SRCPATH), $(OBJPATH), $(shell find $(SRCPATH)* -type d))
-OBJ = $(subst $(SRCPATH), $(OBJPATH), $(SRC:.s=.o))
+OBJDIR := $(subst $(SRCPATH), $(OBJPATH), $(shell find $(SRCPATH)* -type d))
+OBJ := $(subst $(SRCPATH), $(OBJPATH), $(SRC:.s=.o))
 
-INC := -Iinclude/ -Imy_libc/include
 
+BONUSRC := ft_list_push_front_bonus.s  ft_list_remove_if_bonus.s\
+			ft_list_remove_if_bonus.s  ft_list_size_bonus.s\
+			ft_list_sort_bonus.s  list_init_bonus.s
+
+BONUSRC := $(addprefix $(SRCPATH), $(BONUSRC))
+BONUSOBJ := $(subst $(SRCPATH), $(OBJPATH), $(BONUSRC:.s=.o))
+BONUS := bonusrule
 ############################################################################################
-   #_____    _____    _____ 
-  #/ ____|  / ____|  / ____|
- #| |  __  | |      | |     
- #| | |_ | | |      | |     
- #| |__| | | |____  | |____ 
-  #\_____|  \____|  \_____|
-
-CC = gcc 
-CFLAGS = -Wall -Wextra -Werror  -g3
-
+CC := gcc  												  #_____    _____    _____ 
+CFLAGS := -Wall -Wextra -Werror  						#/ ____|  / ____|  / ____|
+INC := -Iinclude/ -Imy_libc/include						#| |  __  | |      | |     
+														#| | |_ | | |      | |     
+														#| |__| | | |____  | |____ 
+														 #\_____|  \____|  \_____|
 ############################################################################################
- # _   _               _____   __  __ 
- #| \ | |     /\      / ____| |  \/  |
- #|  \| |    /  \    | (___   | \  / |
- #| . ` |   / /\ \    \___ \  | |\/| |
- #| |\  |  / ____ \   ____) | | |  | |
- #|_| \_| /_/    \_\ |_____/  |_|  |_|
-  
-AS = nasm
-ASFLAGS = -felf64 -gdwarf
+AS := nasm#	 											 #| \ | |     /\      / ____| |  \/  |
+ASFLAGS := -felf64 # -gdwarf #debugging ELF64			 #|  \| |    /  \    | (___   | \  / |
+														 #| . ` |   / /\ \    \___ \  | |\/| |
+														 #| |\  |  / ____ \   ____) | | |  | |
+														 #|_| \_| /_/    \_\ |_____/  |_|  |_|
 ############################################################################################
 TEST := test
 TEST_SRC := main.c
@@ -41,22 +40,27 @@ TEST_LIB := -L. -lasm
 ############################################################################################
 
 all: $(NAME) 
+bonus: $(BONUS) 
 
 ############################################################################################
-$(TEST): $(NAME) 
+$(TEST): $(BONUS) 
 	$(CC) $(CFLAGS) $(TEST_SRC) $(TEST_LIB) $(INC) -o $(TEST)
+	./test | less -r 
 
-val: $(NAME)
+val: $(BONUS)
 	$(CC) $(CFLAGS) $(TEST_SRC) $(TEST_LIB) $(INC) -o $(TEST)
 	valgrind --leak-check=full ./$(TEST)
 
-debug: $(NAME)
+debug: $(BONUS) 
 	$(CC) $(CFLAGS) $(TEST_SRC) $(TEST_LIB) $(INC) -o $(TEST)
 	gdb	./$(TEST)
 ############################################################################################
 
 $(NAME): $(OBJPATH) $(OBJ)
 	ar rc $(NAME) $(OBJ) 
+
+$(BONUS): $(NAME) $(BONUSOBJ)
+	ar rc $(NAME) $(BONUSOBJ)
 
 $(OBJPATH)%.o: %.s
 	$(AS) $(ASFLAGS) $< -o $@
