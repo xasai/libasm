@@ -18,7 +18,7 @@ INC := -Iinclude/ -Imy_libc/include
  #| |  __  | |      | |     
  #| | |_ | | |      | |     
  #| |__| | | |____  | |____ 
-  #\_____|  \_____|  \_____|
+  #\_____|  \____|  \_____|
 
 CC = gcc 
 CFLAGS = -Wall -Wextra -Werror  -g3
@@ -37,7 +37,7 @@ ASFLAGS = -felf64
 TEST := test
 TEST_SRC := main.c
 TEST_OBJ := $(TEST_SRC:.c=.o)
-TEST_LIB := $(NAME) 
+TEST_LIB := -L. -lasm 
 ############################################################################################
 
 all: $(NAME) 

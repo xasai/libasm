@@ -3,6 +3,7 @@
 #define OK "[\e[0;32mOK\e[0m]\n"
 #define KO "[\e[0;31mKO\e[0m]\n"
 #define CHECK(x) (x ? OK : KO) 
+#define GRADE() "[\e[0;35mCHECK IT BY YOURSELF\e[0m]\n"
 
 void	free_lst(t_list *head)
 {
@@ -10,6 +11,7 @@ void	free_lst(t_list *head)
 	for (t_list *next, *cur = head; next && cur; cur = next)
 	{
 		next = cur->next;
+		cur->next = NULL;
 		free(cur);
 	}
 }
@@ -27,7 +29,8 @@ void	strlen_t()
 
 	char *strs[] = {"str1", "str2i ", "str33333333333", "str44444444444", "a",
 	"", "asdfasdfasdfadsfa"
-		, "veeeeiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiing", 0};
+		, "veeeeiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiing",
+	"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",0};
 
 	for (size_t i = 0; strs[i]; i++)
 	{
@@ -112,6 +115,11 @@ void	write_t()
 		write(1, "\" ", 2);
 		write(1, CHECK(ft==std), check_len);
 	}
+	write(1, "test.txt\n", 9);
+	int fd = open("test.txt", O_RDWR);
+	std = write(fd, strs[0], strlen(strs[0])); print_errno(); errno = 0;
+	ft = ft_write(fd, strs[0], strlen(strs[0])); print_errno();errno=0;
+	write(1,CHECK(std==ft),check_len);
 
 	/* Check errno on error cases */
 	int fail_fd = 32;
@@ -122,8 +130,8 @@ void	write_t()
 	ft = ft_write(1, NULL, 1); print_errno(); errno = 0;
 	write(1, CHECK(std==ft), check_len);
 
-	std = write(1, "", -1); print_errno(); errno = 0;
-	ft = ft_write(1, "", -1); print_errno(); errno = 0;
+	std = write(1, " ", -1); print_errno(); errno = 0;
+	ft = ft_write(1, " ", -1); print_errno(); errno = 0;
 	write(1, CHECK(std==ft), check_len);
 }
 
@@ -276,22 +284,57 @@ void	list_sort_t()
 	free_lst(head);
 }
 
+void	list_remove_t()
+{
+	printf("\t===================\e[0;35m[LIST_REMOVE_IF]\e[0m==========================\n");
+	char *str[] = {"111", "222", "333", "444", "555", "666", "777","888", "999", 0};
+	t_list *head;
+	head = NULL;
+	for(int j=0; j <= 3;j++)
+	{
+		int i = 0;
+		printf("\n=========================== \e[0;32mCASE %d \e[0m===========================\n", j+1);
+		while(str[i]) i++;
+		while(--i >= 0)
+		{
+			if (!((i + j) % 3))
+			{
+				char *nul = malloc(sizeof(*nul) * 18);
+				ft_strcpy(nul, "\e[0;31m000\e[0m");
+				ft_list_push_front(&head, nul);
+			}
+			else
+				ft_list_push_front(&head, str[i]);
+		}
+		for(t_list *cur = head; cur; cur = cur->next)
+			printf("%s--->",(char *)cur->data);
+		printf("|%p|", NULL);
+
+		printf("\nDeleting all \"\e[0;31m000\e[0m\"...\n");
+		ft_list_remove_if(&head, "\e[0;31m000\e[0m", &strcmp, &free);
+		for(t_list *cur=head; cur; cur=cur->next)
+			printf("%s--->",(char *)cur->data);
+		printf("%p\n", NULL);
+		printf("%s", GRADE());
+		free_lst(head);
+	}
+}
+
 void	bonus_t()
 {
-	//list_push_front_t();
-	//list_size_t();
+	list_push_front_t();
+	list_size_t();
 	list_sort_t();	
+	list_remove_t();
 }
 
 int		main()
 {
-	/*
 	write_t();
 	read_t();
 	strlen_t();
 	strcpy_t();
 	strcmp_t();
 	strdup_t();
-	*/
 	bonus_t();
 }

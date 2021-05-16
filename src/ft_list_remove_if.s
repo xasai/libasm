@@ -9,17 +9,16 @@ ft_list_remove_if:
 				push	rbp;
 				mov		rbp, rsp;
 				sub		rsp, 0x18;
+				test	rdi, rdi; list_head == NULL
+				jz		.end;		 goto end
 				mov 	[rbp - 0x18], rdx;	(*compare_data)()
 				mov		[rbp - 0x10], rsi;	*data_ref
 				mov		[rbp - 0x8], rcx;	(*erase_data)()	
 				push	r14;
 				mov		r14, rdi;			r14 = **list_head
-				mov		rdi, [r14];			rdi = *list_head
-				call	ft_list_size;
-				mov		rcx, rax;			rcx = list_size
-.rm_head		test	rcx, rcx;			if rcx == 0
-				jz		.end;					goto end;
-				mov		rdi, [r14];			rdi = *list_head
+.rm_head		mov		rdi, [r14];			rdi = *list_head
+				test	rdi, rdi; 			list_head == NULL
+				jz		.end;					goto end
 				mov		rdi, [rdi];			rdi = list_head->data
 				mov		rsi, [rbp - 0x10];	rsi = *data_ref 
 				call	[rbp - 0x18];		call (*compare_data)(list_head->data, data_ref);
@@ -34,7 +33,7 @@ ft_list_remove_if:
 				call	free wrt ..plt;		free(list_head)
 				pop		rsi;				get rsi
 				mov		[r14],	rsi;		*list_head = next_node
-				dec		rcx;				rcx--
+;;				dec		rcx;				rcx--
 				jmp		.rm_head;			 goto remove_head
 
 ;;.loop			test	rcx, rcx;			if rcx == 0;	

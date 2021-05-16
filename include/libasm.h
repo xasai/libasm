@@ -34,7 +34,8 @@ t_list		*list_init(void *data);
 
 void		ft_list_push_front(t_list **head, void *data);
 void		ft_list_sort(t_list **head, int (*cmp)());
-void		ft_list_remove_if(t_list **head, void *data,  int (*cmp)());
+void		ft_list_remove_if(t_list **head, void *data,
+				int (*cmp)(), void (*data_erase)(void *));
 int			ft_list_size(t_list *head);
 
 #endif
