@@ -25,12 +25,12 @@ void	print_errno()
 {
 	char *str = strerror(errno);
 	write(1, str, strlen(str));
-	write(1, "\n", 1);
+	//write(1, "\n", 1);
 }
 
 void	strlen_t()
 {
-	printf("\t===================\e[0;35m[STRLEN]\e[0m==========================\n");
+	printf("\n\t===================\e[0;35m[STRLEN]\e[0m==========================\n");
 
 	char *strs[] = {"str1", "str2i ", "str33333333333", "str44444444444", "a",
 	"", "asdfasdfasdfadsfa"
@@ -123,19 +123,23 @@ void	write_t()
 	write(1, "test.txt\n", 9);
 	int fd = open("test.txt", O_RDWR);
 	std = write(fd, strs[0], strlen(strs[0])); print_errno(); errno = 0;
+	write(1, "\n", 1);
 	ft = ft_write(fd, strs[0], strlen(strs[0])); print_errno();errno=0;
 	write(1,CHECK(std==ft),check_len);
 
 	/* Check errno on error cases */
 	int fail_fd = 32;
 	std = write(fail_fd, "", 1); print_errno(); errno = 0;
+	write(1, "\n", 1);
 	ft = ft_write(fail_fd, "", 1); print_errno(); errno = 0;
 	write(1, CHECK(std==ft), check_len);
 	std = write(1, NULL, 1); print_errno(); errno = 0;
+	write(1, "\n", 1);
 	ft = ft_write(1, NULL, 1); print_errno(); errno = 0;
 	write(1, CHECK(std==ft), check_len);
 
 	std = write(1, " ", -1); print_errno(); errno = 0;
+	write(1, "\n", 1);
 	ft = ft_write(1, " ", -1); print_errno(); errno = 0;
 	write(1, CHECK(std==ft), check_len);
 }
@@ -165,6 +169,7 @@ void	read_t()
 	int fail_fd = 123;
 	std = read(fail_fd, buf, 123); print_errno(); errno = 0;
 	lseek(fd, 0, SEEK_SET);
+	write(1, "\n", 1);
 	ft = ft_read(fail_fd, buf, 123); print_errno(); errno = 0;
 	lseek(fd, 0, SEEK_SET);
 	write(1, CHECK(ft==std), check_len);	
@@ -172,6 +177,7 @@ void	read_t()
 	char *fail_addr = NULL;
 	std = read(fd, fail_addr, 123); print_errno(); errno = 0;
 	lseek(fd, 0, SEEK_SET);
+	write(1, "\n", 1);
 	ft = ft_read(fd, fail_addr, 123); print_errno(); errno = 0;
 	lseek(fd, 0, SEEK_SET);
 	write(1, CHECK(ft==std), check_len);	
@@ -179,6 +185,7 @@ void	read_t()
 	int	neg_size = -1;
 	std = read(fd, buf,	neg_size); print_errno(); errno = 0;
 	lseek(fd, 0, SEEK_SET);
+	write(1, "\n", 1);
 	ft = ft_read(fd, buf, neg_size); print_errno(); errno = 0;
 	lseek(fd, 0, SEEK_SET);
 	write(1, CHECK(ft==std), check_len);	
@@ -188,6 +195,7 @@ void	read_t()
 	fd = open("test.txt", O_WRONLY);
 	std = read(fd, buf, 100); print_errno(); errno = 0;
 	lseek(fd, 0, SEEK_SET);
+	write(1, "\n", 1);
 	ft = ft_read(fd, buf, 100); print_errno(); errno = 0;
 	lseek(fd, 0, SEEK_SET);
 	write(1, CHECK(ft==std), check_len);	
