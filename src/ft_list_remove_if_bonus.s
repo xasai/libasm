@@ -37,8 +37,8 @@ ft_list_remove_if:
 
 .loop			mov		r14, rdi;			r14 = *prev_node
 				mov		rdi, [rdi + 8];		rdi = *curr_node	
-				test	rdi, rdi;			if (curr == NULL)
-				jz		.end;					goto end
+				cmp	 	rdi, 0;				 if (curr == NULL)
+				je		.end;					goto end
 				mov		rdi, [rdi];			rdi = curr_node->data
 				mov		rsi, [rbp - 0x10];	rsi = *data_ref
 				call	[rbp - 0x18];		(*compare_data)(curr_node->data, data_ref)
@@ -53,7 +53,7 @@ ft_list_remove_if:
 				call	free wrt ..plt;		free(curr_node)
 				pop		rsi;
 				mov		[r14 + 8], rsi;		prev->next = curr_node->next
-				mov		rdi, rsi;			curr_node = curr_node->next
+				mov		rdi, r14;			do with that prev node again for prev->next
 				jmp		.loop
 .end			pop		r14;
 				leave	

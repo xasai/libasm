@@ -312,7 +312,7 @@ void	list_remove_t()
 		while(str[i]) i++;
 		while(--i >= 0)
 		{
-			if (!(i % 3) || j == 4)
+			if ((i != 1)  && (!(i % 3) || j == 4))
 			{
 				char *nul = malloc(sizeof(*nul) * 18);
 				ft_strcpy(nul, "\e[0;31m000\e[0m");
